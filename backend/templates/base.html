@@ -15,7 +15,7 @@
             </div>
             <div class="input-box" onclick="sendFocus()">
                 <img src="{{ url_for('static', filename='images/mag.png') }}" />
-                <input placeholder="Search for a Keeping up with the Kardashians episode" id="filter-text-val" onkeyup="filterText()">
+                <input placeholder="Search for a caffeinated drink" id="filter-text-val" onkeyup="filterText()">
             </div>
         </div>
         <div id="answer-box">
@@ -25,11 +25,10 @@
 
     <script>
 
-        function answerBoxTemplate(title,titleDesc,rating){
+        function answerBoxTemplate(title,url){
             return `<div class=''>
-                <h3 class='episode-title'>${title}</h3>
-                <p class='episode-desc'>${titleDesc}</p>
-                <p class='episode-rating'>IMDB Rating: ${rating}</p>
+                <h3 class='drink-title'>${title}</h3>
+                <p class='drink-url'>${url}</p>
             </div>`
         }
 
@@ -38,14 +37,20 @@
         }
 
         function filterText(){
+            let query = document.getElementById("filter-text-val").value.trim();
+    
+            if (query === "") {
+                document.getElementById("answer-box").innerHTML = "";
+                return;
+            }
             document.getElementById("answer-box").innerHTML = ""
             console.log(document.getElementById("filter-text-val").value)
-            fetch("/episodes?" + new URLSearchParams({ title: document.getElementById("filter-text-val").value }).toString())
+            fetch("/recommendations?" + new URLSearchParams({ query: query }).toString())
             .then((response) => response.json())
             .then((data) => data.forEach(row => {
                 
                 let tempDiv = document.createElement("div")
-                tempDiv.innerHTML = answerBoxTemplate(row.title,row.descr,row.imdb_rating)
+                tempDiv.innerHTML = answerBoxTemplate(row["title"],row["url"])
                 document.getElementById("answer-box").appendChild(tempDiv)
             }));
 
