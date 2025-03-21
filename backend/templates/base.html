@@ -1,60 +1,156 @@
 <!doctype html>
-<title>{% block title %}{% endblock %} - Flaskr</title>
+<title>{% block title %}To Caffinity and Beyond{% endblock %}</title>
 <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Kanit&family=Montserrat&family=Open+Sans:wght@500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Kanit:wght@400;700&family=Montserrat:wght@400;600&family=Poppins:wght@300;500;700&display=swap" rel="stylesheet">
 <body>
     <div class="full-body-container">
+        <div class="coffee-bean left"></div>
+        <div class="coffee-bean right"></div>
+        
         <div class="top-text">
-            <div class="google-colors">
-                <h1 id="google-4">To</h1>
-                <h1 id="google-3">Caffinity</h1>
-                <h1 id="google-0-1">and</h1>
-                <h1 id="google-0-2">Beyond</h1>
+            <div class="logo-container">
+                <div class="logo-icon">
+                    <div class="cup">
+                        <div class="steam">
+                            <span></span>
+                            <span></span>
+                            <span></span>
+                        </div>
+                    </div>
+                </div>
+                <div class="logo-text">
+                    <h1 id="logo-1">To</h1>
+                    <h1 id="logo-2">Caffinity</h1>
+                    <h1 id="logo-3">and</h1>
+                    <h1 id="logo-4">Beyond</h1>
+                </div>
             </div>
+            <p class="tagline">Find your perfect caffeine companion</p>
+            
             <div class="input-box" onclick="sendFocus()">
-                <img src="{{ url_for('static', filename='images/mag.png') }}" />
-                <input placeholder="Search for a caffeinated drink" id="filter-text-val" onkeyup="filterText()">
+                <img src="{{ url_for('static', filename='images/mag.png') }}" alt="Search icon" />
+                <input placeholder="Search for a caffeinated drink..." id="filter-text-val" onkeyup="filterText()">
+            </div>
+            
+            <div class="quick-suggestions">
+                <button onclick="quickSearch('coffee')">Coffee</button>
+                <button onclick="quickSearch('tea')">Tea</button>
+                <button onclick="quickSearch('energy')">Energy Drinks</button>
+                <button onclick="quickSearch('cold brew')">Cold Brew</button>
             </div>
         </div>
+        
+        <div id="loading" class="loading-spinner hidden">
+            <div class="spinner"></div>
+        </div>
+        
         <div id="answer-box">
-
+            <!-- Results will appear here -->
         </div>
     </div>
 
     <script>
-
-        function answerBoxTemplate(title,url){
-            return `<div class=''>
-                <h3 class='drink-title'>${title}</h3>
-                <p class='drink-url'>${url}</p>
-            </div>`
+        // Caffeine meter levels
+        const caffeineIcons = {
+            low: '☕',
+            medium: '☕☕',
+            high: '☕☕☕'
+        };
+        
+        // Random caffeine facts to display while loading
+        const caffeineFacts = [
+            "Did you know? Caffeine reaches its peak level in your bloodstream within 30-60 minutes of consumption.",
+            "Fun fact: The word caffeine comes from the German word 'kaffee' and the French word 'café'.",
+            "Coffee trivia: It takes about 42 coffee beans to make an espresso.",
+            "Tea fact: Green tea contains about half the caffeine of black tea.",
+            "Energy fact: The world's most caffeinated coffee contains 1,555 mg of caffeine per 12 oz cup!"
+        ];
+        
+        function getRandomFact() {
+            return caffeineFacts[Math.floor(Math.random() * caffeineFacts.length)];
+        }
+        
+        function answerBoxTemplate(drink) {
+            return `
+            <div class="drink-result">
+                <div class="drink-header">
+                    <h3 class="drink-title">${drink.title}</h3>
+                </div>
+                <div class="drink-details">
+                    <a href="${drink.url}" target="_blank" class="learn-more-btn">
+                        <span class="btn-text">Learn more</span>
+                        <span class="btn-icon">→</span>
+                    </a>
+                </div>
+            </div>`;
         }
 
-        function sendFocus(){
-            document.getElementById('filter-text-val').focus()
+        function sendFocus() {
+            document.getElementById('filter-text-val').focus();
         }
 
-        function filterText(){
+        function showLoading() {
+            const loadingEl = document.getElementById("loading");
+            loadingEl.classList.remove("hidden");
+            loadingEl.setAttribute('data-fact', getRandomFact());
+        }
+
+        function hideLoading() {
+            document.getElementById("loading").classList.add("hidden");
+        }
+        
+        function quickSearch(term) {
+            document.getElementById('filter-text-val').value = term;
+            filterText();
+        }
+
+        function filterText() {
             let query = document.getElementById("filter-text-val").value.trim();
     
             if (query === "") {
                 document.getElementById("answer-box").innerHTML = "";
                 return;
             }
-            document.getElementById("answer-box").innerHTML = ""
-            console.log(document.getElementById("filter-text-val").value)
-            fetch("/recommendations?" + new URLSearchParams({ query: query }).toString())
-            .then((response) => response.json())
-            .then((data) => data.forEach(row => {
-                
-                let tempDiv = document.createElement("div")
-                tempDiv.innerHTML = answerBoxTemplate(row["title"],row["url"])
-                document.getElementById("answer-box").appendChild(tempDiv)
-            }));
-
-        }
             
+            showLoading();
+            document.getElementById("answer-box").innerHTML = "";
+            
+            fetch("/recommendations?" + new URLSearchParams({ query: query }).toString())
+                .then((response) => response.json())
+                .then((data) => {
+                    hideLoading();
+                    if (data.length === 0) {
+                        document.getElementById("answer-box").innerHTML = 
+                            '<div class="no-results"><div class="empty-cup"></div><p>No caffeinated drinks found.</p><p class="suggestion">Try another search term or check our quick suggestions above.</p></div>';
+                        return;
+                    }
+                    
+                    // Add header for results
+                    let resultsHeader = document.createElement("div");
+                    resultsHeader.className = "results-header";
+                    resultsHeader.innerHTML = `<h2>Your Caffeine Recommendations</h2>`;
+                    document.getElementById("answer-box").appendChild(resultsHeader);
+                    
+                    // Add results
+                    let resultsContainer = document.createElement("div");
+                    resultsContainer.className = "results-container";
+                    
+                    data.forEach(drink => {
+                        let tempDiv = document.createElement("div");
+                        tempDiv.innerHTML = answerBoxTemplate(drink);
+                        resultsContainer.appendChild(tempDiv.firstElementChild);
+                    });
+                    
+                    document.getElementById("answer-box").appendChild(resultsContainer);
+                })
+                .catch(error => {
+                    hideLoading();
+                    console.error("Error:", error);
+                    document.getElementById("answer-box").innerHTML = 
+                        '<div class="error-message">Something went wrong. Please try again later.</div>';
+                });
+        }
     </script>
 </body>
