@@ -77,15 +77,35 @@
             <div class="drink-result">
                 <div class="drink-header">
                     <h3 class="drink-title">${drink.title}</h3>
+                    <div class="caffeine-content text-sm text-gray-700">
+                        ☕ ${drink.caffeine_mg || 0}mg caffeine
+                    </div>
                 </div>
+
+                ${drink.flavors.length > 0 ? `
+                    <div class="flavor-profile">
+                        <span class="flavor-label text-sm font-medium text-gray-600">Flavors:</span>
+                        <div class="flavor-pills">
+                            ${drink.flavors.map(flavor => `
+                                <span class="flavor-pill bg-amber-100 text-amber-800 text-xs px-2 py-1 rounded-full">
+                                    ${flavor}
+                                </span>
+                            `).join('')}
+                        </div>
+                    </div>
+                ` : ''}
+
                 <div class="drink-details">
                     <a href="${drink.url}" target="_blank" class="learn-more-btn">
                         <span class="btn-text">Learn more</span>
                         <span class="btn-icon">→</span>
                     </a>
                 </div>
-            </div>`;
+            </div>
+            `;
         }
+
+
 
         function sendFocus() {
             document.getElementById('filter-text-val').focus();
