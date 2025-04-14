@@ -165,7 +165,7 @@ body {
     border: 2px solid var(--coffee-light);
     display: flex;
     align-items: center;
-    padding: 12px 20px;
+    padding: 12px 30px;
     width: 100%;
     max-width: 600px;
     background-color: white;
@@ -205,7 +205,7 @@ body {
     display: flex;
     flex-wrap: wrap;
     justify-content: center;
-    gap: 10px;
+    gap: 15px;
     margin: 20px auto;
     width: 100%;
     max-width: 600px;
@@ -238,7 +238,7 @@ body {
     margin-top: 20px;
     display: flex;
     flex-direction: column;
-    gap: 15px;
+    gap: 20px;
 }
 
 .results-header {
@@ -424,7 +424,7 @@ body {
     }
     
     .input-box, .quick-suggestions, #answer-box {
-        max-width: 90%;
+        max-width: 1200px;
     }
     
     .coffee-bean {
@@ -438,3 +438,4 @@ body {
     margin: 5px 0 10px;
     font-style: italic;
 }
+

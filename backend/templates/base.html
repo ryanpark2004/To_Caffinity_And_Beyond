@@ -1,195 +1,229 @@
-<!doctype html>
+<!DOCTYPE html>
 <title>{% block title %}To Caffinity and Beyond{% endblock %}</title>
-<link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Kanit:wght@400;700&family=Montserrat:wght@400;600&family=Poppins:wght@300;500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link
+  href="https://fonts.googleapis.com/css2?family=Kanit:wght@400;700&family=Montserrat:wght@400;600&family=Poppins:wght@300;500;700&display=swap"
+  rel="stylesheet"
+/>
 <body>
-    <div class="full-body-container">
-        <div class="coffee-bean left"></div>
-        <div class="coffee-bean right"></div>
-        
-        <div class="top-text">
-            <div class="logo-container">
-                <div class="logo-icon">
-                    <div class="cup">
-                        <div class="steam">
-                            <span></span>
-                            <span></span>
-                            <span></span>
-                        </div>
-                    </div>
-                </div>
-                <div class="logo-text">
-                    <h1 id="logo-1">To</h1>
-                    <h1 id="logo-2">Caffinity</h1>
-                    <h1 id="logo-3">and</h1>
-                    <h1 id="logo-4">Beyond</h1>
-                </div>
+  <div class="full-body-container">
+    <div class="coffee-bean left"></div>
+    <div class="coffee-bean right"></div>
+
+    <div class="top-text">
+      <div class="logo-container">
+        <div class="logo-icon">
+          <div class="cup">
+            <div class="steam">
+              <span></span>
+              <span></span>
+              <span></span>
             </div>
-            <p class="tagline">Find your perfect caffeine companion</p>
-            
-            <div class="input-box" onclick="sendFocus()">
-                <img src="{{ url_for('static', filename='images/mag.png') }}" alt="Search icon" />
-                <input placeholder="Search for a caffeinated drink..." id="filter-text-val" onkeydown="handleKeyDown(event)">
-            </div>
-            <div class="input-box" onclick="sendFocus2()">
-                <img src="{{ url_for('static', filename='images/mag.png') }}" alt="Search icon" />
-                <input placeholder="Search for an ingredient..." id="ingredient-text-val" onkeydown="handleKeyDown(event)">
-            </div>
-            
-            <div class="quick-suggestions">
-                <button onclick="quickSearch('coffee')">Coffee</button>
-                <button onclick="quickSearch('tea')">Tea</button>
-                <button onclick="quickSearch('energy')">Energy Drinks</button>
-                <button onclick="quickSearch('cold brew')">Cold Brew</button>
-            </div>
+          </div>
         </div>
-        
-        <div id="loading" class="loading-spinner hidden">
-            <div class="spinner"></div>
+        <div class="logo-text">
+          <h1 id="logo-1">To</h1>
+          <h1 id="logo-2">Caffinity</h1>
+          <h1 id="logo-3">and</h1>
+          <h1 id="logo-4">Beyond</h1>
         </div>
-        
-        <div id="answer-box">
-            <!-- Results will appear here -->
-        </div>
+      </div>
+      <p class="tagline">Find your perfect caffeine companion</p>
+
+      <div class="input-box" onclick="sendFocus()">
+        <img
+          src="{{ url_for('static', filename='images/mag.png') }}"
+          alt="Search icon"
+        />
+        <input
+          placeholder="Search for a caffeinated drink..."
+          id="filter-text-val"
+          onkeydown="handleKeyDown(event)"
+        />
+      </div>
+      <div class="input-box" onclick="sendFocus2()">
+        <img
+          src="{{ url_for('static', filename='images/mag.png') }}"
+          alt="Search icon"
+        />
+        <input
+          placeholder="Search for an ingredient..."
+          id="ingredient-text-val"
+          onkeydown="handleKeyDown(event)"
+        />
+      </div>
+
+      <div class="quick-suggestions">
+        <button onclick="quickSearch('coffee')">Coffee</button>
+        <button onclick="quickSearch('tea')">Tea</button>
+        <button onclick="quickSearch('energy')">Energy Drinks</button>
+        <button onclick="quickSearch('cold brew')">Cold Brew</button>
+      </div>
     </div>
 
-    <script>
-        // Caffeine meter levels
-        const caffeineIcons = {
-            low: '☕',
-            medium: '☕☕',
-            high: '☕☕☕'
-        };
-        
-        // Random caffeine facts to display while loading
-        const caffeineFacts = [
-            "Did you know? Caffeine reaches its peak level in your bloodstream within 30-60 minutes of consumption.",
-            "Fun fact: The word caffeine comes from the German word 'kaffee' and the French word 'café'.",
-            "Coffee trivia: It takes about 42 coffee beans to make an espresso.",
-            "Tea fact: Green tea contains about half the caffeine of black tea.",
-            "Energy fact: The world's most caffeinated coffee contains 1,555 mg of caffeine per 12 oz cup!"
-        ];
-        
-        function getRandomFact() {
-            return caffeineFacts[Math.floor(Math.random() * caffeineFacts.length)];
-        }
-        
-        function answerBoxTemplate(drink) {
-            return `
-            <div class="drink-result">
-                <div class="drink-header">
-                    <h3 class="drink-title">${drink.title}</h3>
-                    <div class="caffeine-content text-sm text-gray-700">
-                        ☕ ${drink.caffeine_mg || 0}mg caffeine
-                    </div>
-                </div>
+    <div id="loading" class="loading-spinner hidden">
+      <div class="spinner"></div>
+    </div>
 
-                ${drink.extra_info ? `
-                    <p class="drink-extra">${drink.extra_info}</p>
-                ` : ''}
+    <div id="answer-box">
+      <!-- Results will appear here -->
+    </div>
+  </div>
 
-                ${drink.flavors.length > 0 ? `
-                    <div class="flavor-profile">
-                        <span class="flavor-label text-sm font-medium text-gray-600">Flavors:</span>
-                        <div class="flavor-pills">
-                            ${drink.flavors.map(flavor => `
-                                <span class="flavor-pill bg-amber-100 text-amber-800 text-xs px-2 py-1 rounded-full">
-                                    ${flavor}
-                                </span>
-                            `).join('')}
-                        </div>
-                    </div>
-                ` : ''}
+  <script>
+    // Caffeine meter levels
+    const caffeineIcons = {
+      low: "☕",
+      medium: "☕☕",
+      high: "☕☕☕",
+    };
 
-                <div class="drink-details">
-                    <a href="${drink.url}" target="_blank" class="learn-more-btn">
-                        <span class="btn-text">Learn more</span>
-                        <span class="btn-icon">→</span>
-                    </a>
-                </div>
+    // Random caffeine facts to display while loading
+    const caffeineFacts = [
+      "Did you know? Caffeine reaches its peak level in your bloodstream within 30-60 minutes of consumption.",
+      "Fun fact: The word caffeine comes from the German word 'kaffee' and the French word 'café'.",
+      "Coffee trivia: It takes about 42 coffee beans to make an espresso.",
+      "Tea fact: Green tea contains about half the caffeine of black tea.",
+      "Energy fact: The world's most caffeinated coffee contains 1,555 mg of caffeine per 12 oz cup!",
+    ];
+
+    function getRandomFact() {
+      return caffeineFacts[Math.floor(Math.random() * caffeineFacts.length)];
+    }
+
+    function answerBoxTemplate(drink) {
+      return `
+    <div class="drink-result bg-white shadow-md rounded-xl px-6 py-4 mb-6 w-full max-w-[1200px] mx-auto">
+      <div class="drink-header flex justify-between items-start w-full">
+        <h3 class="drink-title text-xl font-semibold text-gray-900 max-w-[85%]">
+          ${drink.title}
+        </h3>
+      </div>
+
+      ${
+        drink.extra_info
+          ? `<p class="drink-extra text-gray-800 mt-2">${drink.extra_info}</p>`
+          : ""
+      }
+
+      <p class="drink-caffeine text-sm text-gray-700 mt-1">
+        ☕ Caffeine Amount: ${drink.caffeine_mg ? drink.caffeine_mg : "Unknown"}
+      </p>
+
+      ${
+        drink.flavors.length > 0
+          ? `
+          <div class="flavor-profile mt-4">
+            <span class="flavor-label text-sm font-medium text-gray-600">Flavors/Types:</span>
+            <div class="flavor-pills flex flex-wrap gap-2 mt-2">
+              ${drink.flavors
+                .map(
+                  (flavor) => `
+                  <span class="flavor-pill bg-amber-100 text-amber-800 text-xs px-2 py-1 rounded-full">
+                    ${flavor}
+                  </span>
+                `
+                )
+                .join("")}
             </div>
-            `;
-        }
+          </div>
+        `
+          : ""
+      }
 
-        function handleKeyDown(event) {
-            if (event.key === "Enter") {
-                filterText();
-            }
-        }
+      <div class="drink-details mt-6">
+        <a href="${
+          drink.url
+        }" target="_blank" class="learn-more-btn inline-flex items-center text-blue-600 hover:underline">
+          <span class="btn-text">Learn more</span>
+          <span class="btn-icon ml-1">→</span>
+        </a>
+      </div>
+    </div>
+  `;
+    }
 
-        function sendFocus() {
-            document.getElementById('filter-text-val').focus();
-        }
-        function sendFocus2() {
-            document.getElementById('ingredient-text-val').focus();
-        }
+    function handleKeyDown(event) {
+      if (event.key === "Enter") {
+        filterText();
+      }
+    }
 
-        function showLoading() {
-            const loadingEl = document.getElementById("loading");
-            loadingEl.classList.remove("hidden");
-            loadingEl.setAttribute('data-fact', getRandomFact());
-        }
+    function sendFocus() {
+      document.getElementById("filter-text-val").focus();
+    }
+    function sendFocus2() {
+      document.getElementById("ingredient-text-val").focus();
+    }
 
-        function hideLoading() {
-            document.getElementById("loading").classList.add("hidden");
-        }
-        
-        function quickSearch(term) {
-            document.getElementById('filter-text-val').value = term;
-            filterText();
-        }
+    function showLoading() {
+      const loadingEl = document.getElementById("loading");
+      loadingEl.classList.remove("hidden");
+      loadingEl.setAttribute("data-fact", getRandomFact());
+    }
 
-        function filterText() {
-            let query = document.getElementById("filter-text-val").value.trim();
-            let ingredient = document.getElementById("ingredient-text-val").value.trim();
-            if (query === "") {
-                document.getElementById("answer-box").innerHTML = "";
-                return;
-            }
-            if (ingredient === "") {
-                dict = {query: query}
-            }else {
-                dict = {query:query, ingredient:ingredient}
-            }
-            showLoading();
-            document.getElementById("answer-box").innerHTML = "";
-            
-            fetch("/recommendations?" + new URLSearchParams(dict).toString())
-                .then((response) => response.json())
-                .then((data) => {
-                    hideLoading();
-                    if (data.length === 0) {
-                        document.getElementById("answer-box").innerHTML = 
-                            '<div class="no-results"><div class="empty-cup"></div><p>No caffeinated drinks found.</p><p class="suggestion">Try another search term or check our quick suggestions above.</p></div>';
-                        return;
-                    }
-                    
-                    // Add header for results
-                    let resultsHeader = document.createElement("div");
-                    resultsHeader.className = "results-header";
-                    resultsHeader.innerHTML = `<h2>Your Caffeine Recommendations</h2>`;
-                    document.getElementById("answer-box").appendChild(resultsHeader);
-                    
-                    // Add results
-                    let resultsContainer = document.createElement("div");
-                    resultsContainer.className = "results-container";
-                    
-                    data.forEach(drink => {
-                        let tempDiv = document.createElement("div");
-                        tempDiv.innerHTML = answerBoxTemplate(drink);
-                        resultsContainer.appendChild(tempDiv.firstElementChild);
-                    });
-                    
-                    document.getElementById("answer-box").appendChild(resultsContainer);
-                })
-                .catch(error => {
-                    hideLoading();
-                    console.error("Error:", error);
-                    document.getElementById("answer-box").innerHTML = 
-                        '<div class="error-message">Something went wrong. Please try again later.</div>';
-                });
-        }
-    </script>
+    function hideLoading() {
+      document.getElementById("loading").classList.add("hidden");
+    }
+
+    function quickSearch(term) {
+      document.getElementById("filter-text-val").value = term;
+      filterText();
+    }
+
+    function filterText() {
+      let query = document.getElementById("filter-text-val").value.trim();
+      let ingredient = document
+        .getElementById("ingredient-text-val")
+        .value.trim();
+      if (query === "") {
+        document.getElementById("answer-box").innerHTML = "";
+        return;
+      }
+      if (ingredient === "") {
+        dict = { query: query };
+      } else {
+        dict = { query: query, ingredient: ingredient };
+      }
+      showLoading();
+      document.getElementById("answer-box").innerHTML = "";
+
+      fetch("/recommendations?" + new URLSearchParams(dict).toString())
+        .then((response) => response.json())
+        .then((data) => {
+          hideLoading();
+          if (data.length === 0) {
+            document.getElementById("answer-box").innerHTML =
+              '<div class="no-results"><div class="empty-cup"></div><p>No caffeinated drinks found.</p><p class="suggestion">Try another search term or check our quick suggestions above.</p></div>';
+            return;
+          }
+
+          // Add header for results
+          let resultsHeader = document.createElement("div");
+          resultsHeader.className = "results-header";
+          resultsHeader.innerHTML = `<h2>Your Caffeine Recommendations</h2>`;
+          document.getElementById("answer-box").appendChild(resultsHeader);
+
+          // Add results
+          let resultsContainer = document.createElement("div");
+          resultsContainer.className = "results-container";
+
+          data.forEach((drink) => {
+            let tempDiv = document.createElement("div");
+            tempDiv.innerHTML = answerBoxTemplate(drink);
+            resultsContainer.appendChild(tempDiv.firstElementChild);
+          });
+
+          document.getElementById("answer-box").appendChild(resultsContainer);
+        })
+        .catch((error) => {
+          hideLoading();
+          console.error("Error:", error);
+          document.getElementById("answer-box").innerHTML =
+            '<div class="error-message">Something went wrong. Please try again later.</div>';
+        });
+    }
+  </script>
 </body>
