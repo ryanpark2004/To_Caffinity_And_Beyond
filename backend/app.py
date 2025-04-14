@@ -25,14 +25,12 @@ drinks_df = pd.DataFrame(data)
 
 def extract_caffeine(row):
     text = " ".join([
-        str(row.get("description", "")),str(row.get("bullet_points", "")),str(row.get("reviews", ""))
+        str(row.get("description", "")),str(row.get("bullet_points", ""))
     ])
     match = re.search(r'(\d+)\s*mg(?:\s*of)?\s*caffeine', text, re.IGNORECASE)
     return int(match.group(1)) if match else 0
 
 drinks_df['caffeine_mg'] = drinks_df.apply(extract_caffeine, axis=1)
-
-
 
 app = Flask(__name__)
 CORS(app)
@@ -57,12 +55,11 @@ def process_results(results):
 @app.route("/recommendations")
 def episodes_search():
     text = request.args.get("query")
-    method = request.args.get("method", "svd")
+    method = request.args.get("query", "svd")
     if method == "svd":
         result_df = svd_recommend(text, drinks_df)
     else:
         result_df = cossim(text, drinks_df)
-
     res = process_results(result_df)
     return res
 

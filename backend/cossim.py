@@ -13,7 +13,7 @@ def cossim(query, products_df):
     return products_df.iloc[sims.argsort()[-5:][::-1]]
 
 #run to compare wiht calebs'
-def svd_recommend(query, products_df, k=10, top_k=5):
+def svd_recommend(query, products_df, k=5, top_k=5):
     #in case it's missing, fill the missing strings 
     #"Great tasting coffee, Organic Fair trade Chocolate, Caramel Best coffee ever"
     documents = (
@@ -22,17 +22,16 @@ def svd_recommend(query, products_df, k=10, top_k=5):
         products_df['flavors'].fillna('').astype(str) + ' ' +
         products_df['reviews'].fillna('').astype(str)
     )
-    vectorizer = TfidfVectorizer(stop_words='english', max_df=0.9, min_df=3)
+    vectorizer = TfidfVectorizer(stop_words='english', max_df=0.7, min_df=70)
     td_matrix = vectorizer.fit_transform(documents)
-
     #reduce the dimensions bro and process the query
-
     svd = TruncatedSVD(n_components=k)
-    print(svd)
     doc_latent = svd.fit_transform(td_matrix)
     doc_latent = normalize(doc_latent)
     query_vec = vectorizer.transform([query])
     query_latent = normalize(query_vec.dot(svd.components_.T))
+    print()
+
     #calc the cossimalirities
     sims = doc_latent.dot(query_latent.T).flatten()
     top_indices = sims.argsort()[::-1][:top_k]
