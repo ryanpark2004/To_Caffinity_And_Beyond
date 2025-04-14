@@ -50,7 +50,8 @@ def process_results(results):
             flavors = ast.literal_eval(d["flavors"])
         except (ValueError):
             flavors = []
-        processed.append({"title": d["title"], "url": d["url"], "caffeine_mg": d["caffeine_mg"], "flavors": flavors})
+        extra_info = d["whole_title"].replace(d["title"], "").strip(", ")
+        processed.append({"title": d["title"], "whole_title": d.get("whole_title", ""), "extra_info": extra_info, "url": d["url"], "caffeine_mg": d["caffeine_mg"], "flavors": flavors})
     return processed
 
 
