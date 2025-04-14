@@ -38,11 +38,9 @@ app = Flask(__name__)
 CORS(app)
 
 
-
 @app.route("/")
 def home():
     return render_template("base.html", title="sample html")
-
 
 # TEST
 def process_results(results):
@@ -59,8 +57,7 @@ def process_results(results):
 @app.route("/recommendations")
 def episodes_search():
     text = request.args.get("query")
-    method = request.args.get("method", "cosine")
-
+    method = request.args.get("method", "svd")
     if method == "svd":
         result_df = svd_recommend(text, drinks_df)
     else:
