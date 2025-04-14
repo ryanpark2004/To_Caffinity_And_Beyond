@@ -35,6 +35,5 @@ def svd_recommend(query, products_df, k=10, top_k=5):
     query_latent = normalize(query_vec.dot(svd.components_.T))
     #calc the cossimalirities
     sims = doc_latent.dot(query_latent.T).flatten()
-    print(sims)
     top_indices = sims.argsort()[::-1][:top_k]
     return products_df.iloc[top_indices]
