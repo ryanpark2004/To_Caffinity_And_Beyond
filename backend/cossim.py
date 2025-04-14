@@ -12,6 +12,7 @@ def cossim(query, products_df):
     sims = cosine_similarity(query_vec, tfidf)[0]
     return products_df.iloc[sims.argsort()[-5:][::-1]]
 
+
 #run to compare wiht calebs'
 def svd_recommend(query, products_df, k=10, top_k=5):
     #in case it's missing, fill the missing strings 
