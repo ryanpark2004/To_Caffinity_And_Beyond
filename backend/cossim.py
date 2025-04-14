@@ -13,7 +13,9 @@ def cossim(query, products_df):
     return products_df.iloc[sims.argsort()[-5:][::-1]]
 
 #run to compare wiht calebs'
-def svd_recommend(query, products_df, k=10, top_k=5):
+def svd_recommend(query, ingredient, products_df, k=10, top_k=5):
+    if ingredient:
+        products_df = products_df[~products_df['ingredients'].str.contains(ingredient, case=False)]
     #in case it's missing, fill the missing strings 
     #"Great tasting coffee, Organic Fair trade Chocolate, Caramel Best coffee ever"
     documents = (

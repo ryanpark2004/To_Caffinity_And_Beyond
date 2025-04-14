@@ -33,6 +33,10 @@
                 <img src="{{ url_for('static', filename='images/mag.png') }}" alt="Search icon" />
                 <input placeholder="Search for a caffeinated drink..." id="filter-text-val" onkeydown="handleKeyDown(event)">
             </div>
+            <div class="input-box" onclick="sendFocus2()">
+                <img src="{{ url_for('static', filename='images/mag.png') }}" alt="Search icon" />
+                <input placeholder="Search for an ingredient..." id="ingredient-text-val" onkeydown="handleKeyDown(event)">
+            </div>
             
             <div class="quick-suggestions">
                 <button onclick="quickSearch('coffee')">Coffee</button>
@@ -114,6 +118,9 @@
         function sendFocus() {
             document.getElementById('filter-text-val').focus();
         }
+        function sendFocus2() {
+            document.getElementById('ingredient-text-val').focus();
+        }
 
         function showLoading() {
             const loadingEl = document.getElementById("loading");
@@ -132,16 +139,20 @@
 
         function filterText() {
             let query = document.getElementById("filter-text-val").value.trim();
-    
+            let ingredient = document.getElementById("ingredient-text-val").value.trim();
             if (query === "") {
                 document.getElementById("answer-box").innerHTML = "";
                 return;
             }
-            
+            if (ingredient === "") {
+                dict = {query: query}
+            }else {
+                dict = {query:query, ingredient:ingredient}
+            }
             showLoading();
             document.getElementById("answer-box").innerHTML = "";
             
-            fetch("/recommendations?" + new URLSearchParams({ query: query }).toString())
+            fetch("/recommendations?" + new URLSearchParams(dict).toString())
                 .then((response) => response.json())
                 .then((data) => {
                     hideLoading();

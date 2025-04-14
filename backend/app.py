@@ -58,8 +58,9 @@ def process_results(results):
 def episodes_search():
     text = request.args.get("query")
     method = request.args.get("method", "svd")
+    ingredient = request.args.get("ingredient")
     if method == "svd":
-        result_df = svd_recommend(text, drinks_df)
+        result_df = svd_recommend(text, ingredient, drinks_df)
     else:
         result_df = cossim(text, drinks_df)
 
