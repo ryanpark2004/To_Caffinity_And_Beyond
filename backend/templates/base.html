@@ -86,6 +86,10 @@
                     </div>
                 </div>
 
+                ${drink.extra_info ? `
+                    <p class="drink-extra">${drink.extra_info}</p>
+                ` : ''}
+
                 ${drink.flavors.length > 0 ? `
                     <div class="flavor-profile">
                         <span class="flavor-label text-sm font-medium text-gray-600">Flavors:</span>

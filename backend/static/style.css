@@ -431,3 +431,10 @@ body {
         display: none;
     }
 }
+.drink-extra {
+    font-family: 'Montserrat', sans-serif;
+    color: var(--coffee-medium);
+    font-size: 14px;
+    margin: 5px 0 10px;
+    font-style: italic;
+}
