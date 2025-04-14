@@ -28,7 +28,7 @@ def svd_recommend(query, products_df, k=10, top_k=5):
 
     #reduce the dimensions bro and process the query
 
-    svd = TruncatedSVD(n_components=k)
+    svd = TruncatedSVD(n_components=k, random_state=42)
     print(svd)
     doc_latent = svd.fit_transform(td_matrix)
     doc_latent = normalize(doc_latent)
