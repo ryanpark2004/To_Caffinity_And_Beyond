@@ -4,7 +4,7 @@ from flask import Flask, render_template, request
 from flask_cors import CORS
 from helpers.MySQLDatabaseHandler import MySQLDatabaseHandler
 import pandas as pd
-from cossim import svd_recommend
+from cossim import cossim, svd_recommend
 import re
 import ast
 
