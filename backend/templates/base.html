@@ -131,6 +131,16 @@
           .join("")
       : `<span class="no-flavors">No additional types/flavors available. Sorry!</span>`
   }
+      ${
+        drink.svd_tags && drink.svd_tags.length
+          ? `<div class="svd-tags mt-3">
+               <span class="text-sm font-medium text-gray-600">Tags:</span>
+               <span class="text-sm font-semibold text-gray-800 ml-2">
+                 ${drink.svd_tags.slice(0, 10).join(", ")}
+               </span>
+             </div>`
+          : ``
+      }
 </div>
       </div>
 

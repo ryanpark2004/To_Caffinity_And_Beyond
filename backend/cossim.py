@@ -4,6 +4,7 @@ from sklearn.decomposition import TruncatedSVD
 from sklearn.preprocessing import normalize
 import numpy as np
 
+
 # caleb's cossim:
 def cossim(query, products_df):
     vectorizer = TfidfVectorizer()
@@ -11,6 +12,7 @@ def cossim(query, products_df):
     query_vec = vectorizer.transform([query])
     sims = cosine_similarity(query_vec, tfidf)[0]
     return products_df.iloc[sims.argsort()[-5:][::-1]]
+
 
 def print_svd_tags(vectorizer, svd, top_n=1):
     """
@@ -28,10 +30,10 @@ def print_svd_tags(vectorizer, svd, top_n=1):
     dim 8: ultra | monster | monster energy | ghost | ghost energy | protein | smart energy | cold brew | smart | variety pack
     dim 9: frappuccino | mocha | starbucks | ghost | cold brew | brew | ghost energy | bottles | cold | caramel
     dim 10: ghost | ghost energy | ultra | protein | sour | monster | rockstar | patch kids | sour patch | patch
-    
+
     sometimes the same word shows up twice like "protein" in dim 4 and 5
     so we printed out the top 10 terms per dim
-    in dim 4, we focus on protein-enhanced coffee drinks 
+    in dim 4, we focus on protein-enhanced coffee drinks
     in dim 5, we focus on protein-enhanced energy drinks
 
     or for "c4" in dim 1 and dim 3
@@ -41,9 +43,12 @@ def print_svd_tags(vectorizer, svd, top_n=1):
     terms = vectorizer.get_feature_names_out()
     for i, comp in enumerate(svd.components_):
         terms_in_comp = zip(terms, comp)
-        sorted_terms = sorted(terms_in_comp, key=lambda x: abs(x[1]), reverse=True)[:top_n]
+        sorted_terms = sorted(terms_in_comp, key=lambda x: abs(x[1]), reverse=True)[
+            :top_n
+        ]
         tags = [term for term, _ in sorted_terms]
         print(f"dim {i}: {' | '.join(tags)}")
+
 
 # run to compare wiht calebs'
 def svd_recommend(
@@ -114,6 +119,19 @@ def svd_recommend(
     doc_latent = svd.fit_transform(td_matrix)
     print_svd_tags(vectorizer, svd, top_n=10)
     doc_latent = normalize(doc_latent)
+    terms = vectorizer.get_feature_names_out()
+    components = svd.components_
+    svd_tags = []
+    for i, j in enumerate(doc_latent):
+        top = j.argsort()[::-1][:10]
+        tags = []
+        for d in top:
+            x = components[d]
+            tag = terms[abs(x).argmax()]
+            tags.append(tag)
+        svd_tags.append(tags)
+    products_df = products_df.copy()
+    products_df["svd_tags"] = svd_tags
     boosted_query = query.lower()
     if "coffee" in boosted_query:
         boosted_query += " brew beans roast"
