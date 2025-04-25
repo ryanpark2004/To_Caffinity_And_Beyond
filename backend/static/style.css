@@ -439,3 +439,13 @@ body {
     font-style: italic;
 }
 
+.flavor-pills .no-flavors {
+    background-color: #fef3c7; 
+    color: #92400e;           
+    font-size: 0.75rem;         
+    padding: 0.25rem 0.5rem;   
+    border-radius: 9999px;      
+    font-style: italic;
+    display: inline-block;
+  }
+  

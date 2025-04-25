@@ -31,16 +31,20 @@ def extract_caffeine(row):
             str(row.get("bullet_points", "")),
             str(row.get("reviews", "")),
             str(row.get("title", "")),
+            str(row.get("whole_title", "")),
+            str(row.get("ingredients", "")),
         ]
     )
-    match = re.search(r"(\d+)\s*mg(?:\s*of)?\s*caffeine", text, re.IGNORECASE)
-    if match:
-        return f"{match.group(1)} mg caffeine"
-    new_match = re.search(
-        r"(\d+(?:\.\d+)?)\s*(?:cups?|cup)\s+of\s+coffee", text, re.IGNORECASE
-    )
-    if new_match:
-        return f"{new_match.group(1)} cups of coffee"
+    patterns = [
+        r"(\\d+)\\s*mg(?:\\s*of)?\\s*caffeine",
+        r"(\d+)\s*mg\b",
+        r"(\\d+(?:\\.\\d+)?)\\s*(?:cups?|cup)\\s+of\\s+coffee",
+        r"(\\d+)\\s*hours?\\s*of\\s*energy",
+    ]
+    for pat in patterns:
+        match = re.search(pat, text, re.IGNORECASE)
+        if match:
+            return match.group(0)
     return ""
 
 
@@ -73,7 +77,7 @@ def process_results(results):
                 "url": d["url"],
                 "caffeine_mg": d["caffeine_mg"],
                 "flavors": flavors,
-                "rating": d["rating"]
+                "rating": d["rating"],
             }
         )
 

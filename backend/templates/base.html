@@ -49,7 +49,7 @@
           alt="Search icon"
         />
         <input
-          placeholder="Search for an ingredient..."
+          placeholder="Filter results by an ingredient..."
           id="ingredient-text-val"
           onkeydown="handleKeyDown(event)"
         />
@@ -109,30 +109,30 @@
       }
 
       <div style="font-family: 'Montserrat', sans-serif;" class="flex justify-between items-center text-sm text-gray-700 mt-1">
-        <div>☕ Caffeine Amount: ${drink.caffeine_mg ? drink.caffeine_mg : "Unknown"}</div>
+        <div>☕ Caffeine Amount: ${
+          drink.caffeine_mg ? drink.caffeine_mg : "Unknown"
+        }</div>
         <div>Rating: ${drink.rating}/5</div>
       </div>
 
-      ${
-        drink.flavors.length > 0
-          ? `
-          <div class="flavor-profile mt-4">
-            <span class="flavor-label text-sm font-medium text-gray-600">Flavors/Types:</span>
-            <div class="flavor-pills flex flex-wrap gap-2 mt-2">
-              ${drink.flavors
-                .map(
-                  (flavor) => `
-                  <span class="flavor-pill bg-amber-100 text-amber-800 text-xs px-2 py-1 rounded-full">
-                    ${flavor}
-                  </span>
-                `
-                )
-                .join(", ")}
-            </div>
-          </div>
-        `
-          : ""
-      }
+      <div class="flavor-profile mt-4">
+        <span class="flavor-label text-sm font-medium text-gray-600">Flavors/Types:</span>
+        <div class="flavor-pills flex flex-wrap gap-2 mt-2">
+  ${
+    drink.flavors.length > 0
+      ? drink.flavors
+          .map(
+            (flavor) => `
+            <span class="flavor-pill bg-amber-100 text-amber-800 text-xs px-2 py-1 rounded-full">
+              ${flavor}
+            </span>
+          `
+          )
+          .join("")
+      : `<span class="no-flavors">No additional types/flavors available. Sorry!</span>`
+  }
+</div>
+      </div>
 
       <div class="drink-details mt-6">
         <a href="${
