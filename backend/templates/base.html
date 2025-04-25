@@ -24,12 +24,70 @@
     </div>
 
     <script>
+        // Caffeine meter levels
+        const caffeineIcons = {
+            low: '☕',
+            medium: '☕☕',
+            high: '☕☕☕'
+        };
+        
+        // Random caffeine facts to display while loading
+        const caffeineFacts = [
+            "Did you know? Caffeine reaches its peak level in your bloodstream within 30-60 minutes of consumption.",
+            "Fun fact: The word caffeine comes from the German word 'kaffee' and the French word 'café'.",
+            "Coffee trivia: It takes about 42 coffee beans to make an espresso.",
+            "Tea fact: Green tea contains about half the caffeine of black tea.",
+            "Energy fact: The world's most caffeinated coffee contains 1,555 mg of caffeine per 12 oz cup!"
+        ];
+        
+        function getRandomFact() {
+            return caffeineFacts[Math.floor(Math.random() * caffeineFacts.length)];
+        }
+        
+        function answerBoxTemplate(drink) {
+            return `
+            <div class="drink-result">
+                <div class="drink-header">
+                    <div class="flex justify-between items-center">
+                        <h3 class="drink-title">${drink.title}</h3>
+                        <div class="caffeine-content text-sm text-gray-700">
+                            <div>Rating: ${drink.rating}/5</div>
+                            <div class="text-right">☕ ${drink.caffeine_mg || 0}mg caffeine</div>
+                        </div>
+                    </div>
+                </div>
 
-        function answerBoxTemplate(title,url){
-            return `<div class=''>
-                <h3 class='drink-title'>${title}</h3>
-                <p class='drink-url'>${url}</p>
-            </div>`
+                ${drink.extra_info ? `
+                    <p class="drink-extra">${drink.extra_info}</p>
+                ` : ''}
+
+                ${drink.flavors.length > 0 ? `
+                    <div class="flavor-profile">
+                        <span class="flavor-label text-sm font-medium text-gray-600">Flavors:</span>
+                        <div class="flavor-pills">
+                            ${drink.flavors.map(flavor => `
+                                <span class="flavor-pill bg-amber-100 text-amber-800 text-xs px-2 py-1 rounded-full">
+                                    ${flavor}
+                                </span>
+                            `).join('')}
+                        </div>
+                    </div>
+                ` : ''}
+
+                <div class="drink-details">
+                    <a href="${drink.url}" target="_blank" class="learn-more-btn">
+                        <span class="btn-text">Learn more</span>
+                        <span class="btn-icon">→</span>
+                    </a>
+                </div>
+            </div>
+            `;
+        }
+
+        function handleKeyDown(event) {
+            if (event.key === "Enter") {
+                filterText();
+            }
         }
 
         function sendFocus(){

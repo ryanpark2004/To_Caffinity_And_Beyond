@@ -36,7 +36,12 @@ def home():
 def process_results(results):
     processed = []
     for _,d in results.iterrows():
-        processed.append({"title": d["title"], "url": d["url"]})
+        try:
+            flavors = ast.literal_eval(d["flavors"])
+        except (ValueError):
+            flavors = []
+        extra_info = d["whole_title"].replace(d["title"], "").strip(", ")
+        processed.append({"title": d["title"], "whole_title": d.get("whole_title", ""), "extra_info": extra_info, "url": d["url"], "caffeine_mg": d["caffeine_mg"], "flavors": flavors, "rating": d["rating"]})
     return processed
 
 
