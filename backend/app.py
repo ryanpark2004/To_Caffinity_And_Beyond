@@ -73,6 +73,7 @@ def process_results(results):
                 "url": d["url"],
                 "caffeine_mg": d["caffeine_mg"],
                 "flavors": flavors,
+                "rating": d["rating"]
             }
         )
 

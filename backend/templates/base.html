@@ -108,9 +108,10 @@
           : ""
       }
 
-      <p style="font-family: 'Montserrat', sans-serif;" class="drink-caffeine text-sm text-gray-700 mt-1">
-        ☕ Caffeine Amount: ${drink.caffeine_mg ? drink.caffeine_mg : "Unknown"}
-      </p>
+      <div style="font-family: 'Montserrat', sans-serif;" class="flex justify-between items-center text-sm text-gray-700 mt-1">
+        <div>☕ Caffeine Amount: ${drink.caffeine_mg ? drink.caffeine_mg : "Unknown"}</div>
+        <div>Rating: ${drink.rating}/5</div>
+      </div>
 
       ${
         drink.flavors.length > 0
